@@ -1,0 +1,97 @@
+graph MER_OficinaMecanica {
+    graph [fontname="Helvetica", fontsize=11, splines=true, overlap=false, nodesep=0.35, ranksep=0.55];
+    node  [fontname="Helvetica", fontsize=9];
+    edge  [fontname="Helvetica", fontsize=8, len=1.7];
+
+    // ---------- ENTIDADES ----------
+    node [shape=box, style="rounded,filled", fillcolor="#D6E8FF"];
+    Cliente; Mecanico; Especialidade; Fornecedor; Peca; ServicoCatalogo; Veiculo; Garantia; OrdemServico;
+
+    node [shape=box, peripheries=2, fillcolor="#FFE9C2"];
+    ItemOS [label="ItemOrdemServico"];
+    HistOS [label="HistoricoStatusOS"];
+
+    node [shape=box, style="rounded,filled", fillcolor="#E4D6FF"];
+    Carro; Moto;
+
+    // ---------- ATRIBUTOS ----------
+    node [shape=ellipse, style=filled, fillcolor=white, fontsize=8, width=0.3, height=0.25];
+
+    a_cli_id [label=<<u>id_cliente</u>>]; a_cli_nome[label="nome"]; a_cli_doc[label="cpf_cnpj"]; a_cli_tel[label="telefone*"]; a_cli_mail[label="email*"];
+    Cliente -- a_cli_id; Cliente -- a_cli_nome; Cliente -- a_cli_doc; Cliente -- a_cli_tel; Cliente -- a_cli_mail;
+
+    a_vei_id[label=<<u>id_veiculo</u>>]; a_vei_placa[label="placa"]; a_vei_marca[label="marca"]; a_vei_modelo[label="modelo"]; a_vei_ano[label="ano_fabricacao"];
+    Veiculo -- a_vei_id; Veiculo -- a_vei_placa; Veiculo -- a_vei_marca; Veiculo -- a_vei_modelo; Veiculo -- a_vei_ano;
+
+    a_carro_portas[label="num_portas"]; a_carro_comb[label="tipo_combustivel"];
+    Carro -- a_carro_portas; Carro -- a_carro_comb;
+    a_moto_cil[label="cilindrada"];
+    Moto -- a_moto_cil;
+
+    a_mec_id[label=<<u>id_mecanico</u>>]; a_mec_nome[label="nome"]; a_mec_cpf[label="cpf"]; a_mec_adm[label="data_admissao"];
+    Mecanico -- a_mec_id; Mecanico -- a_mec_nome; Mecanico -- a_mec_cpf; Mecanico -- a_mec_adm;
+
+    a_esp_id[label=<<u>id_especialidade</u>>]; a_esp_nome[label="nome_especialidade"];
+    Especialidade -- a_esp_id; Especialidade -- a_esp_nome;
+
+    a_forn_id[label=<<u>id_fornecedor</u>>]; a_forn_nome[label="nome"]; a_forn_cnpj[label="cnpj"];
+    Fornecedor -- a_forn_id; Fornecedor -- a_forn_nome; Fornecedor -- a_forn_cnpj;
+
+    a_peca_id[label=<<u>id_peca</u>>]; a_peca_nome[label="nome"]; a_peca_cod[label="codigo_fabricante"]; a_peca_preco[label="preco_unitario"]; a_peca_estoque[label="estoque_atual"];
+    Peca -- a_peca_id; Peca -- a_peca_nome; Peca -- a_peca_cod; Peca -- a_peca_preco; Peca -- a_peca_estoque;
+
+    a_serv_id[label=<<u>id_servico</u>>]; a_serv_desc[label="descricao"]; a_serv_valor[label="valor_padrao"]; a_serv_tempo[label="tempo_estimado_horas"];
+    ServicoCatalogo -- a_serv_id; ServicoCatalogo -- a_serv_desc; ServicoCatalogo -- a_serv_valor; ServicoCatalogo -- a_serv_tempo;
+
+    a_os_id[label=<<u>id_os</u>>]; a_os_abertura[label="data_abertura"]; a_os_conclusao[label="data_conclusao*"]; a_os_status[label="status"]; a_os_km[label="km_veiculo"]; a_os_valor[label="valor_total (derivado)"];
+    OrdemServico -- a_os_id; OrdemServico -- a_os_abertura; OrdemServico -- a_os_conclusao; OrdemServico -- a_os_status; OrdemServico -- a_os_km; OrdemServico -- a_os_valor;
+
+    a_item_num[label=<<u>numero_item</u> (parcial)>]; a_item_horas[label="quantidade_horas"]; a_item_valor[label="valor_cobrado"];
+    ItemOS -- a_item_num; ItemOS -- a_item_horas; ItemOS -- a_item_valor;
+
+    a_gar_id[label=<<u>id_garantia</u>>]; a_gar_ini[label="data_inicio"]; a_gar_fim[label="data_fim"]; a_gar_status[label="status_garantia"];
+    Garantia -- a_gar_id; Garantia -- a_gar_ini; Garantia -- a_gar_fim; Garantia -- a_gar_status;
+
+    a_hist_dt[label=<<u>data_hora</u> (parcial)>]; a_hist_ant[label="status_anterior*"]; a_hist_novo[label="status_novo"];
+    HistOS -- a_hist_dt; HistOS -- a_hist_ant; HistOS -- a_hist_novo;
+
+    a_me_nivel[label="nivel_certificacao"]; a_me_data[label="data_certificacao"];
+    a_pu_qtd[label="quantidade"]; a_pu_preco[label="preco_aplicado"];
+
+    // ---------- RELACIONAMENTOS ----------
+    node [shape=diamond, style=filled, fillcolor="#FFFFFF", fontsize=8, width=0.4, height=0.3];
+    R_possui       [label="possui"];
+    R_supervisiona [label="supervisiona"];
+    R_atua         [label="atua em"];
+    R_fornece      [label="fornece"];
+    R_abre         [label="gera"];
+    R_executa      [label="e executada por"];
+    R_contem       [label="contem"];
+    R_referente    [label="e referente a"];
+    R_consome      [label="consome"];
+    R_hist         [label="registra"];
+    R_gar          [label="recebe"];
+    R_especializa  [shape=triangle, label="d", fillcolor="#E4D6FF", width=0.3];
+
+    Cliente -- R_possui [label="(1,N)"];       R_possui -- Veiculo [label="(1,1)"];
+    Mecanico -- R_supervisiona [label="(0,N)"];  R_supervisiona -- Mecanico [label="(0,1)" style=dashed];
+    Mecanico -- R_atua [label="(0,N)"];         R_atua -- Especialidade [label="(1,N)"];
+    R_atua -- a_me_nivel; R_atua -- a_me_data;
+    Fornecedor -- R_fornece [label="(1,N)"];    R_fornece -- Peca [label="(1,1)"];
+    Veiculo -- R_abre [label="(0,N)"];          R_abre -- OrdemServico [label="(1,1)"];
+    Mecanico -- R_executa [label="(0,N)"];      R_executa -- OrdemServico [label="(1,1)"];
+    OrdemServico -- R_contem [label="(1,1)"];   R_contem -- ItemOS [label="(1,N)"];
+    ServicoCatalogo -- R_referente [label="(1,N)"]; R_referente -- ItemOS [label="(1,1)"];
+    ItemOS -- R_consome [label="(0,N)"];        R_consome -- Peca [label="(0,N)"];
+    R_consome -- a_pu_qtd; R_consome -- a_pu_preco;
+    OrdemServico -- R_hist [label="(1,1)"];     R_hist -- HistOS [label="(1,N)"];
+    OrdemServico -- R_gar [label="(1,1)"];      R_gar -- Garantia [label="(0,1)"];
+
+    Veiculo -- R_especializa;
+    R_especializa -- Carro;
+    R_especializa -- Moto;
+
+    labelloc="t";
+    label="MER Conceitual - Oficina Mecanica (Notacao de Peter Chen)\ncardinalidade (min,max) | sublinhado = identificador | * = atributo opcional\nGrupo 4 - Cleber Gabriel Pereira Passos, Joaquim Manoel Lima Viana Vieira, Felipe Rodrigues Garcia";
+    fontsize=12;
+}
