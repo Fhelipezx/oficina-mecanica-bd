@@ -31,9 +31,10 @@ mysql -u seu_usuario -p < sql/03_consultas.sql
 ```
 
 - `01_ddl.sql` cria o banco `oficina_mecanica` do zero e todas as 15 tabelas.
-- `02_carga.sql` popula o banco com dados fictícios e realistas (42 ordens de
-  serviço, 103 itens de serviço, 146 registros de peças utilizadas, 122
-  eventos de histórico, entre outros).
+- `02_carga.sql` popula o banco com dados fictícios e realistas (40 clientes,
+  40 veículos, 12 mecânicos, 40 peças, 20 serviços de catálogo, 42 ordens de
+  serviço, 103 itens de serviço, 118 registros de peças utilizadas, 18
+  garantias e 122 eventos de histórico, entre outros).
 - `03_consultas.sql` contém as 15 consultas de verificação exigidas.
 
 Todos os três scripts foram testados do início ao fim em uma instância limpa
