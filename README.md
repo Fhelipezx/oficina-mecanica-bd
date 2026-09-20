@@ -1,4 +1,4 @@
-# Projeto Final — Laboratório de Banco de Dados (GPE17M40083)
+# Projeto Final — Laboratório de Banco de Dados (GPE17M40053)
 ## Etapa 1 — Projeto e Construção do Banco (N1)
 
 **Tema:** Oficina Mecânica
