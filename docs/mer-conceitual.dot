@@ -158,3 +158,4 @@ graph MER_OficinaMecanica {
     label="MER Conceitual — Oficina Mecânica (Notação de Peter Chen)\lcardinalidade (min,max) junto à entidade restringida  |  sublinhado = identificador  |  * = atributo opcional\lretângulo/losango duplo = entidade fraca e relacionamento identificador  |  elipse tracejada = derivado\ltriângulo (t,d) = especialização total e disjunta\lGrupo 4 — Cleber Gabriel Pereira Passos, Joaquim Manoel Lima Viana Vieira, Felipe Rodrigues Garcia\l";
     fontsize=12;
 }
+
