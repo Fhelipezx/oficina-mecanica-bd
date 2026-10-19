@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Relatório Final — Etapa 2 — Oficina Mecânica</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  body { font-family: "DejaVu Sans", Arial, sans-serif; font-size: 9.7pt; line-height: 1.35; color: #1b1f2a; }
+  h1 { font-size: 20pt; color: #1f2d6b; margin: 0 0 4pt; }
+  h2 { font-size: 14pt; color: #1f2d6b; border-bottom: 2px solid #1f2d6b; padding-bottom: 3pt; margin: 16pt 0 6pt; page-break-after: avoid; }
+  h3 { font-size: 11pt; color: #243b8a; margin: 10pt 0 3pt; page-break-after: avoid; }
+  p { margin: 4pt 0 6pt; text-align: justify; }
+  code, pre { font-family: "DejaVu Sans Mono", Consolas, monospace; font-size: 8.6pt; }
+  code { background: #eef1f8; padding: 0 2pt; border-radius: 2pt; }
+  pre { background: #f3f5fa; border: 1px solid #d5dbec; padding: 6pt 8pt; white-space: pre-wrap; page-break-inside: avoid; }
+  table { border-collapse: collapse; width: 100%; margin: 5pt 0 8pt; font-size: 8.7pt; }
+  th { background: #1f2d6b; color: #fff; text-align: left; padding: 4pt 5pt; }
+  td { border: 1px solid #cfd6ea; padding: 3pt 4pt; vertical-align: top; }
+  tr { page-break-inside: avoid; }
+  .capa { text-align: center; padding-top: 70pt; page-break-after: always; }
+  .capa p { text-align: center; font-size: 11pt; }
+  .sub { color: #3a4a8a; font-size: 12.5pt; margin-bottom: 22pt; }
+  .box { border-left: 4px solid #1f2d6b; background: #eef1fb; padding: 6pt 9pt; margin: 8pt 0; page-break-inside: avoid; }
+  .warn { border-left-color: #b26a00; background: #fff6e6; }
+  .ok { color: #0b7a3b; font-weight: bold; } .pend { color: #b3261e; font-weight: bold; } .plan { color: #8a6d00; font-weight: bold; }
+  .ev { margin: 6pt 0 10pt; page-break-inside: avoid; }
+  .ev img { max-width: 100%; border: 1px solid #b9c3e0; }
+  .ev .leg { font-size: 8.4pt; color: #444; }
+  .pendente { border: 2px dashed #b3261e; background: #fdeeee; color: #8c1d18; padding: 6pt 8pt; font-size: 8.8pt; }
+  .pb { page-break-before: always; }
+  ul, ol { margin: 2pt 0 4pt 15pt; padding: 0; } li { margin: 1pt 0; }
+</style>
+</head>
+<body>
+
+<!-- ================= CAPA ================= -->
+<div class="capa">
+  <p><strong>UNIVERSIDADE CATÓLICA DE BRASÍLIA</strong><br>Bacharelado em Engenharia de Software</p>
+  <br><br>
+  <h1>PROJETO FINAL — RELATÓRIO CONSOLIDADO</h1>
+  <div class="sub">Etapa 1 revisada (A1–A5) + Etapa 2 (B1–B8)<br>Do modelo conceitual à aplicação: Oficina Mecânica</div>
+  <p><strong>Unidade curricular:</strong> Laboratório de Banco de Dados — GPE17M40083</p>
+  <p><strong>Professor:</strong> Samuel Novais Moura Júnior</p>
+  <br>
+  <p><strong>Grupo 4</strong><br>Cléber Gabriel Pereira Passos<br>Joaquim Manoel Lima Viana Vieira<br>Felipe Rodrigues Garcia</p>
+  <br>
+  <p><strong>SGBD:</strong> MySQL 8.0+ / InnoDB &nbsp;|&nbsp; <strong>Aplicação:</strong> Java 11+ (Swing) + JDBC + Maven</p>
+  <p><strong>Data de entrega da Etapa 2:</strong> 18/10/2026 (prazo antecipado pelo professor)</p>
+  <p>Brasília — DF, 2026</p>
+</div>
+
+<!-- ================= SUMÁRIO ================= -->
+<h2 style="margin-top:0">Sumário</h2>
+<table>
+  <tr><th style="width:12%">Seção</th><th>Conteúdo</th></tr>
+  <tr><td>1</td><td>Como ler este relatório: critérios de status (Implementado / Testado / Planejado)</td></tr>
+  <tr><td>2</td><td>Revisão da Etapa 1: devolutiva, errata e mudanças no modelo</td></tr>
+  <tr><td>3</td><td>B1 e B2 — Aplicação, acesso a dados e proteção contra SQL Injection</td></tr>
+  <tr><td>4</td><td>B3 — Transações, rollback, concorrência e nível de isolamento</td></tr>
+  <tr><td>5</td><td>B4 — Otimização de consultas (três estudos com EXPLAIN)</td></tr>
+  <tr><td>6</td><td>B5 — Segurança, perfis, menor privilégio, senhas e dados pessoais</td></tr>
+  <tr><td>7</td><td>B6 — Gatilhos e auditoria</td></tr>
+  <tr><td>8</td><td>B7 — Projeto físico, volumetria, backup e arquivamento</td></tr>
+  <tr><td>9</td><td>Roteiro da demonstração (15 min)</td></tr>
+  <tr><td>10</td><td>Checklist da Etapa 2 (Anexo C do edital) com status por evidência</td></tr>
+  <tr><td>11</td><td>Declaração de uso de Inteligência Artificial</td></tr>
+  <tr><td>Anexo I</td><td>Relatório da Etapa 1 (A1 escopo e 21 regras, A2 MER, A3 dicionário, A4 modelo lógico, A5 normalização) — incorporado integralmente ao final deste PDF, seguido do MER, do modelo lógico e do dicionário de dados</td></tr>
+</table>
+
+<!-- ================= 1 ================= -->
+<h2>1. Como ler este relatório</h2>
+<p>Este documento distingue três estados para cada requisito, para que nenhuma afirmação exceda o que foi comprovado:</p>
+<ul>
+  <li><span class="ok">Implementado</span> — o código ou script correspondente existe no repositório e foi revisado (leitura do código; o código Java compila sem erros com o JDK 21).</li>
+  <li><span class="ok">Testado</span> — a equipe executou no MySQL/aplicação e anexou a evidência (print da saída real), exibida nesta seção. O estado é atribuído <em>automaticamente</em> pela presença do arquivo em <code>docs/evidencias/</code>.</li>
+  <li><span class="plan">Planejado</span> — proposta documental, ainda não implantada.</li>
+  <li><span class="pend">Pendente de registro</span> — o recurso está implementado, mas a evidência da execução ainda não foi anexada.</li>
+</ul>
+<div class="box">Os scripts SQL são verificados no MySQL pelo arquivo <code>sql/09_verificacao_final.sql</code> (somente leitura). Cada linha de sua saída deve exibir <strong>OK</strong>.</div>
+<div class="ev" data-src="verif_09.png" data-leg="Saída do 09_verificacao_final.sql (todas as verificações = OK)"></div>
+
+<!-- ================= 2 ================= -->
+<h2>2. Revisão da Etapa 1</h2>
+<h3>2.1 Devolutiva e ações corretivas</h3>
+<table>
+  <tr><th style="width:24%">Apontamento / melhoria</th><th>Ação na Etapa 2</th><th style="width:26%">Onde está</th></tr>
+  <tr><td>Legibilidade do MER no PDF</td><td>Diagrama em página inteira, alta resolução, na notação de Peter Chen (mantida do início ao fim).</td><td>Anexo I; <code>docs/mer-conceitual.png/.pdf/.dot</code></td></tr>
+  <tr><td>Normalização / BCNF</td><td>Dependências funcionais listadas por relação e análise 3FN/BCNF (A5).</td><td>Anexo I (A5) e seção 2.3</td></tr>
+  <tr><td>CHECKs adicionais</td><td><code>ck_carro_portas</code>, <code>ck_moto_cilindrada</code>, <code>ck_os_km</code>, <code>ck_os_valor_total</code>, <code>ck_item_horas</code>, <code>ck_pecautil_preco</code>, <code>ck_servico_tempo</code>.</td><td><code>sql/01_ddl.sql</code></td></tr>
+  <tr><td>RN20 sem apoio do banco</td><td>Gatilhos <code>trg_mecanico_supervisor_bi/bu</code> (a CHECK não é possível: a coluna participa de <code>ON DELETE SET NULL</code>).</td><td><code>sql/04_gatilhos_auditoria.sql</code></td></tr>
+  <tr><td>RN16 apenas na aplicação</td><td>Gatilho <code>trg_garantia_os_concluida_bi</code> impede garantia em OS não concluída, também em SQL direto.</td><td><code>sql/04_gatilhos_auditoria.sql</code></td></tr>
+  <tr><td>Consultas C05 e C11</td><td>C05 substantiva (BETWEEN, IN, IS NULL); C11 realmente correlacionada.</td><td><code>sql/03_consultas.sql</code></td></tr>
+  <tr><td>Código da unidade curricular e integrantes</td><td>Código correto <strong>GPE17M40083</strong> em todos os documentos.</td><td>Capa, READMEs, scripts</td></tr>
+</table>
+<p><em>Observação:</em> a transcrição integral da devolutiva do professor consta no material da Etapa 1 entregue; esta seção resume as ações tomadas.</p>
+
+<h3>2.2 Errata ao relatório da Etapa 1 (anexado)</h3>
+<p>O PDF da Etapa 1 permanece no Anexo I como registro histórico da entrega de 20/09/2026. Três pontos foram <strong>deliberadamente alterados</strong> na Etapa 2 e prevalecem sobre o texto original:</p>
+<table>
+  <tr><th style="width:22%">Ponto</th><th>Etapa 1 (anexo)</th><th>Etapa 2 (vigente)</th></tr>
+  <tr><td><code>ordem_servico.valor_total</code> (A4 §4.3)</td><td>Soma apenas da mão de obra (itens); peças apuradas à parte; consistência por gatilho.</td><td><strong>Total geral = mão de obra + peças.</strong> Recalculado pela aplicação dentro da mesma transação que altera itens/peças (<code>recalcularTotal</code>), e na carga (<code>02_carga.sql</code>). O script 09 audita a igualdade. A redundância continua sendo a única desnormalização deliberada, justificada por desempenho de listagens.</td></tr>
+  <tr><td><code>historico_status_os.data_hora</code></td><td><code>DATETIME</code> (segundo)</td><td><code>DATETIME(6)</code> com <code>CURRENT_TIMESTAMP(6)</code>: duas transições da mesma OS no mesmo segundo não colidem na chave primária <code>(id_os, data_hora)</code>.</td></tr>
+  <tr><td>Quantidade de tabelas</td><td>15 tabelas do domínio</td><td>15 + <code>usuario_sistema</code> (script 05) + <code>auditoria_sistema</code> (script 04): são tabelas de infraestrutura da Etapa 2, fora do MER do domínio.</td></tr>
+</table>
+
+<h3>2.3 Normalização (resumo — análise completa no Anexo I, A5)</h3>
+<p>Todas as relações do domínio estão em 3FN; as listadas abaixo atendem também à BCNF, pois todo determinante de dependência funcional não trivial é chave candidata. As relações <code>cliente</code>, <code>mecanico</code>, <code>veiculo</code>, <code>fornecedor</code> e <code>peca</code> têm uma chave natural alternativa (CPF/CNPJ, placa, código do fabricante) que também é determinante — e também é chave candidata, mantendo a BCNF. <code>ordem_servico</code> está na 3FN, com <code>valor_total</code> como atributo derivado materializado de propósito (seção 2.2).</p>
+<p><strong>Integridade da especialização Veículo → Carro | Moto.</strong> As chaves estrangeiras do DDL garantem que cada linha de <code>carro</code>/<code>moto</code> aponta para um <code>veiculo</code>, mas <em>não</em> garantem sozinhas que todo veículo tenha exatamente uma subclasse compatível com <code>tipo_veiculo</code>. Essa regra é garantida pela aplicação (grava superclasse e subclasse na <em>mesma transação</em>) e <strong>auditada no banco</strong> pelas três consultas de integridade do script 09. Não afirmamos que o DDL, isoladamente, impede o desvio.</p>
+
+<!-- ================= 3 ================= -->
+<h2>3. B1 e B2 — Aplicação e camada de acesso a dados</h2>
+<h3>3.1 B1 — Funcionalidades (status: Implementado)</h3>
+<ul>
+  <li><strong>CRUD completo de 7 entidades</strong> (exigido: 4): Clientes, Veículos (Carro/Moto na mesma transação), Mecânicos, Especialidades, Fornecedores, Peças, Serviços.</li>
+  <li><strong>Duas consultas parametrizadas com junção e agregação:</strong> Consulta de OS (período, status, mecânico; COUNT/SUM/AVG) e Consulta de Peças (fornecedor, faixa de preço, texto). O filtro de data usa limite superior exclusivo (<code>&lt; DATE_ADD(?, INTERVAL 1 DAY)</code>); faixas invertidas são rejeitadas antes da consulta.</li>
+  <li><strong>Relatório consolidado</strong> alimentado pela visão <code>vw_relatorio_consolidado_os</code> (7 tabelas). O cartão de total do relatório é rotulado “Valor Total das OS Exibidas” (inclui OS abertas e canceladas quando o filtro é “Todos”); a receita efetiva de OS Concluídas aparece em separado, e o faturamento mensal vem da visão <code>vw_faturamento_mensal</code>, que considera só OS <em>Concluídas</em>.</li>
+  <li><strong>Operação multitabela em transação única:</strong> adicionar peça a um item (baixa de estoque em <code>peca</code>, registro em <code>peca_utilizada</code> e recálculo de <code>ordem_servico.valor_total</code>) — seção 4. Cancelar/remover devolve as peças ao estoque na mesma transação.</li>
+  <li><strong>Tratamento de erros:</strong> <code>Db.mostrarErro()</code> mapeia SQLState/código (1062 duplicidade; 1451/1452 FK; 3819 CHECK; 1045/1142 permissão; conexão) para mensagem em português com orientação. O detalhe técnico vai apenas para o log do console; <strong>a exceção bruta não é exibida</strong>.</li>
+</ul>
+<div class="ev" data-src="erro_amigavel.png" data-leg="Violação de restrição (ex.: CPF duplicado) com a mensagem tratada exibida ao usuário"></div>
+
+<h3>3.2 B2 — Boas práticas</h3>
+<ul>
+  <li><span class="ok">Consultas parametrizadas:</span> toda execução passa por <code>PreparedStatement</code> (<code>Db.java</code>); o código não usa <code>createStatement</code>. Valores informados pelo usuário entram sempre como parâmetros <code>?</code>. Nomes de tabelas/colunas dos CRUDs vêm de constantes do código, nunca de entrada do usuário.</li>
+  <li><span class="ok">Credenciais fora do código:</span> arquivo <code>app/db.properties</code> (ignorado pelo Git via <code>.gitignore</code>); o repositório traz apenas <code>db.properties.example</code>. A conta técnica <code>app_oficina</code> recebe DML no esquema e não recebe privilégios DDL. A senha não tem valor padrão embutido no código Java; <strong>não</strong> se usa <code>root</code> como padrão na aplicação.</li>
+  <li><span class="ok">Login seguro:</span> a falha técnica ao consultar <code>usuario_sistema</code> (tabela ausente, falta de permissão) <strong>nega o acesso e encerra</strong>; não existe login provisório de administrador e o campo de senha inicia vazio.</li>
+</ul>
+<h3>3.3 Demonstração de SQL Injection (exigida em B2)</h3>
+<table>
+  <tr><th style="width:20%">Entrada usada</th><th style="width:34%">SQL executado</th><th>Resultado esperado pelo código</th></tr>
+  <tr><td><code>' OR '1'='1</code> (aba Segurança e Auditoria → Teste de SQL Injection)</td><td><code>SELECT … FROM cliente WHERE nome LIKE ? LIMIT 50</code> com o parâmetro <code>%' OR '1'='1%</code></td><td>O texto é tratado como <em>literal</em> dentro do <code>LIKE</code>: nenhum cliente tem esse nome, então retorna <strong>0 linhas</strong> (em vez de listar todos os clientes, que seria o efeito da injeção). O print abaixo registra o resultado real.</td></tr>
+</table>
+<div class="ev" data-src="sql_injection.png" data-leg="Resultado real do teste de injeção na aplicação"></div>
+
+<!-- ================= 4 ================= -->
+<h2>4. B3 — Transações e controle de concorrência</h2>
+<h3>4.1 Operação transacional (sucesso)</h3>
+<p>A tela de OS tem duas operações transacionais (<code>Db.transacao</code> = <code>setAutoCommit(false)</code>, <code>COMMIT</code> no sucesso e <code>ROLLBACK</code> em qualquer exceção). A operação central desta etapa é <strong>adicionar peça a um item</strong>, que altera <strong>três tabelas</strong> de forma atômica:</p>
+<pre>-- Operação "Adicionar peça" (3 tabelas: peca, peca_utilizada, ordem_servico)
+BEGIN
+ 1. UPDATE peca SET estoque_atual = estoque_atual - ? WHERE id_peca = ? AND estoque_atual &gt;= ?
+      -- se 0 linhas afetadas: "Estoque insuficiente (RN09)" e ROLLBACK
+ 2. INSERT INTO peca_utilizada (id_os, numero_item, id_peca, quantidade, preco_aplicado) ...
+ 3. UPDATE ordem_servico SET valor_total = (mão de obra + peças) WHERE id_os = ?
+COMMIT
+
+-- Operação "Adicionar item de serviço" (2 tabelas: item_ordem_servico, ordem_servico)
+BEGIN
+ 1. SELECT id_os FROM ordem_servico WHERE id_os = ? FOR UPDATE      -- serializa a numeração dos itens da OS
+ 2. SELECT COALESCE(MAX(numero_item),0)+1 FROM item_ordem_servico WHERE id_os = ?
+ 3. INSERT INTO item_ordem_servico (...)   4. UPDATE ordem_servico SET valor_total = ...
+COMMIT</pre>
+<div class="ev" data-src="tx_sucesso.png" data-leg="Operação concluída: estoque baixado e valor_total conferidos"></div>
+
+<h3>4.2 Falha provocada no meio da transação</h3>
+<p>O botão <strong>“Simular Falha (Rollback B3)”</strong> (restrito ao Administrador) captura estoque e contagem de itens, inicia a transação, insere um item temporário, <strong>baixa 1 unidade da peça 1</strong> e então força o erro (<code>quantidade = 0</code> viola <code>ck_pecautil_quantidade</code>). Após o <code>ROLLBACK</code>, a tela compara os valores antes e depois — que devem ser idênticos. O mesmo cenário existe como roteiro SQL manual em <code>sql/08_experimento_concorrencia.sql</code> (Parte 2).</p>
+<div class="ev" data-src="tx_rollback.png" data-leg="Antes/depois do rollback: estoque e itens inalterados"></div>
+
+<h3>4.3 Experimento com duas sessões</h3>
+<p>Roteiro em <code>sql/08_experimento_concorrencia.sql</code>, Parte 3 — <strong>duas conexões independentes</strong> (o arquivo não deve ser executado de uma só vez). Nível de isolamento: <code>REPEATABLE READ</code> (padrão do InnoDB), conferido por <code>SELECT @@transaction_isolation</code>.</p>
+<table>
+  <tr><th style="width:14%">Passo</th><th>Sessão A</th><th>Sessão B</th></tr>
+  <tr><td>1</td><td><code>START TRANSACTION; SELECT … FROM peca WHERE id_peca=1 FOR UPDATE; UPDATE peca SET estoque_atual = estoque_atual − 2 …</code> (sem COMMIT)</td><td>—</td></tr>
+  <tr><td>2</td><td>—</td><td><code>START TRANSACTION; UPDATE peca SET estoque_atual = estoque_atual − 1 …</code> → <strong>fica esperando</strong> o bloqueio de linha</td></tr>
+  <tr><td>3</td><td><code>COMMIT</code></td><td>a espera termina e o UPDATE é concluído; <code>COMMIT</code></td></tr>
+  <tr><td>4</td><td colspan="2">Verificação: estoque final = inicial − 2 − 1 (nenhuma baixa perdida). A espera pode ser observada em <code>information_schema.innodb_trx</code> e <code>performance_schema.data_lock_waits</code>; acima de <code>innodb_lock_wait_timeout</code> (50 s) ocorre o erro 1205.</td></tr>
+</table>
+<div class="ev" data-src="conc_sessaoA.png" data-leg="Sessão A: nível de isolamento e UPDATE aguardando COMMIT"></div>
+<div class="ev" data-src="conc_sessaoB.png" data-leg="Sessão B: espera (lock wait) e conclusão após o COMMIT de A"></div>
+
+<h3>4.4 Justificativa do nível de isolamento</h3>
+<p>Adotamos <strong>REPEATABLE READ</strong> (padrão do InnoDB) combinado com <em>escritas condicionais atômicas</em> (<code>UPDATE … WHERE estoque_atual &gt;= ?</code>) e <code>SELECT … FOR UPDATE</code> na linha da OS. Motivos: (i) evita leituras não repetíveis nas telas de relatório durante uma operação; (ii) o InnoDB já impede <em>lost update</em> nas escritas da mesma linha por bloqueio exclusivo; (iii) <code>READ COMMITTED</code> reduziria bloqueios de intervalo, mas a aplicação tem baixa concorrência de escrita e não precisa dessa troca; (iv) <code>SERIALIZABLE</code> bloquearia leituras comuns sem necessidade. O custo aceito é a possibilidade de espera/timeout, tratada com mensagem ao usuário.</p>
+
+<!-- ================= 5 ================= -->
+<h2>5. B4 — Otimização de consultas</h2>
+<div class="box warn"><strong>Honestidade da medição.</strong> Os planos e tempos são obtidos pelo roteiro <code>sql/06_otimizacao_indices.sql</code>, que primeiro <em>remove</em> os índices experimentais (o plano “antes” é reproduzível), registra versão do MySQL e volume de dados, e executa <code>EXPLAIN FORMAT=TREE</code> e <code>EXPLAIN ANALYZE</code> (tempo real, MySQL ≥ 8.0.18) antes e depois de cada índice. Este relatório não apresenta custos ou tempos que não tenham saído dessa execução: as imagens abaixo são as saídas reais; ausência de imagem aparece como “Pendente de registro”. Com poucas dezenas de linhas, é esperado que o otimizador por vezes ignore o índice — esse resultado, se ocorrer, deve ser registrado e explicado, e vale tanto quanto um ganho (edital, B4).</div>
+
+<h3>5.1 Consulta 1 — OS concluídas abertas desde 01/01/2026</h3>
+<p><strong>Pergunta:</strong> quais OS foram <em>abertas</em> a partir de 2026-01-01 e estão <em>Concluídas</em>, com cliente, placa e valor? (a coluna de filtro é <code>data_abertura</code>, coerente com o índice).</p>
+<pre>WHERE os.status = 'Concluida' AND os.data_abertura &gt;= '2026-01-01' ORDER BY os.data_abertura DESC</pre>
+<p><strong>Índice:</strong> <code>idx_os_status_abertura (status, data_abertura DESC)</code>. <strong>Ordem das colunas:</strong> primeiro a coluna de <em>igualdade</em> (<code>status</code>), depois a de <em>faixa/ordenação</em> (<code>data_abertura</code>); assim a faixa fica contígua na B-Tree e a ordenação pode ser atendida pelo próprio índice. <strong>Hipótese a conferir no plano:</strong> troca de varredura da tabela por busca no índice e possível dispensa do <em>sort</em>.</p>
+<div class="ev" data-src="b4_c1_antes.png" data-leg="Consulta 1 — EXPLAIN ANALYZE antes do índice (com versão e volume de dados)"></div>
+<div class="ev" data-src="b4_c1_depois.png" data-leg="Consulta 1 — EXPLAIN ANALYZE depois do índice"></div>
+
+<h3>5.2 Consulta 2 — Peças consumidas em OS concluídas, por fornecedor</h3>
+<p><strong>Pergunta:</strong> qual o total em peças aplicadas em OS <em>Concluídas</em> por fornecedor/peça? (OS canceladas e em aberto não entram, pois não são faturamento realizado.)</p>
+<pre>JOIN ordem_servico os ON os.id_os = pu.id_os WHERE os.status = 'Concluida' GROUP BY f.id_fornecedor, p.id_peca</pre>
+<p><strong>Índice:</strong> <code>idx_pecautil_cob (id_peca, id_os, quantidade, preco_aplicado)</code> — <em>índice de cobertura</em>: <code>id_peca</code> primeiro (agrupamento/junção com <code>peca</code>), <code>id_os</code> para a junção com a OS, e as colunas somadas por último para que a leitura dispense a tabela base. <strong>Hipótese:</strong> aparecer “Covering index” no plano; o ganho depende do volume.</p>
+<div class="ev" data-src="b4_c2_antes.png" data-leg="Consulta 2 — antes do índice"></div>
+<div class="ev" data-src="b4_c2_depois.png" data-leg="Consulta 2 — depois do índice"></div>
+
+<h3>5.3 Consulta 3 — Produtividade por mecânico em 2026</h3>
+<p><strong>Pergunta:</strong> quantas OS <em>Concluídas</em> abertas entre 01/01/2026 e 31/12/2026 (limite superior exclusivo <code>&lt; '2027-01-01'</code>) e quantas horas cada mecânico executou?</p>
+<p><strong>Índice:</strong> <code>idx_os_mecanico_data (id_mecanico_responsavel, status, data_abertura)</code>: igualdade na junção/agrupamento por mecânico, igualdade em status e faixa de data por último. <strong>Hipótese:</strong> em tabelas pequenas o otimizador pode preferir varredura; se o plano não mudar, relatamos e explicamos.</p>
+<div class="ev" data-src="b4_c3_antes.png" data-leg="Consulta 3 — antes do índice"></div>
+<div class="ev" data-src="b4_c3_depois.png" data-leg="Consulta 3 — depois do índice"></div>
+
+<!-- ================= 6 ================= -->
+<h2>6. B5 — Segurança e controle de acesso</h2>
+<h3>6.1 Arquitetura adotada (descrição fiel ao código)</h3>
+<ul>
+  <li>A aplicação usa <strong>uma conta técnica de banco</strong>, <code>app_oficina</code>, com apenas <code>SELECT/INSERT/UPDATE/DELETE</code> no esquema (DDL revogado). Não usa <code>root</code>.</li>
+  <li>O <strong>perfil do operador</strong> (Administrador, Atendente, Mecânico), obtido da tabela <code>usuario_sistema</code>, é aplicado <strong>na aplicação</strong>: abas visíveis por perfil e verificação dentro das ações (ex.: o mecânico não abre nem cancela OS e não emite garantia; só o administrador acessa a aba Segurança e Auditoria e a simulação de falha).</li>
+  <li>As <strong>três roles SQL</strong> (<code>role_admin</code>, <code>role_atendente</code>, <code>role_mecanico</code>) e os usuários <code>usr_admin</code>, <code>usr_atendente</code>, <code>usr_mecanico</code> são demonstrados <strong>diretamente no MySQL</strong> com login real; a aplicação não troca de conta de banco por perfil. Reconhecemos esta como limitação de projeto: o menor privilégio no banco é demonstrado pelas roles e, na aplicação, pelo controle por perfil sobre uma conta técnica restrita.</li>
+</ul>
+<h3>6.2 Matriz de privilégios das roles (script 05)</h3>
+<table>
+  <tr><th style="width:17%">Role</th><th>Pode</th><th>Não pode</th></tr>
+  <tr><td><code>role_admin</code></td><td>Todos os privilégios no esquema <code>oficina_mecanica</code> (com <code>GRANT OPTION</code>).</td><td>—</td></tr>
+  <tr><td><code>role_atendente</code></td><td>SELECT/INSERT/UPDATE em cliente, veículo, carro, moto e garantia; em <code>ordem_servico</code>, SELECT apenas nas colunas operacionais listadas no script, INSERT apenas em <code>id_veiculo</code>, <code>id_mecanico_responsavel</code> e <code>km_veiculo</code>, UPDATE apenas em <code>status</code>, <code>km_veiculo</code> e <code>data_conclusao</code>; SELECT em catálogos e na visão <code>vw_atendimento_cliente_veiculo</code>; SELECT de colunas não sensíveis de <code>usuario_sistema</code>.</td><td>DELETE em <code>historico_status_os</code> (GRANT concedido e <strong>REVOKE</strong> aplicado no script); ler <code>senha_hash</code>/<code>salt</code>; alterar <code>valor_total</code> ou o mecânico responsável após a criação da OS.</td></tr>
+  <tr><td><code>role_mecanico</code></td><td>SELECT em colunas <em>não financeiras</em> de <code>ordem_servico</code> (sem <code>valor_total</code>); CRUD de itens e peças utilizadas; UPDATE apenas de <code>peca.estoque_atual</code>; SELECT em catálogo, histórico e na visão <code>vw_mecanico_painel_operacional</code>.</td><td>Ver CPF/telefone/e-mail de clientes; ver valores totais; alterar preços; inserir histórico de status.</td></tr>
+</table>
+<p><strong>Visões com projeção reduzida:</strong> <code>vw_atendimento_cliente_veiculo</code> não inclui CPF/CNPJ nem endereço, e <code>vw_mecanico_painel_operacional</code> não inclui dados pessoais do cliente nem valores financeiros. A restrição é uma barreira efetiva para o mecânico, que não recebe <code>SELECT</code> nas tabelas-base de cliente. Para o atendente, a visão é uma projeção reduzida de conveniência, mas não é a única barreira de segurança: essa role tem acesso direto à tabela <code>cliente</code> para executar as tarefas de atendimento que exigem esses dados.</p>
+<div class="ev" data-src="grants_revoke.png" data-leg="SHOW GRANTS das roles + operação permitida e operação negada com login real (usr_atendente / usr_mecanico)"></div>
+
+<h3>6.3 Senhas (hash + sal)</h3>
+<p>Armazenamos <code>SHA-256(senha ‖ sal)</code> com <strong>sal aleatório de 128 bits</strong> (16 bytes → 32 caracteres hexadecimais), gerado por <code>SecureRandom</code> para cada usuário (<code>SegurancaUtil</code>). Os três usuários de demonstração têm sais distintos de 32 caracteres e hash de 64 (conferido pelo script 09). O script 05 atualiza hash, sal, perfil e situação dos três usuários de demonstração se for reexecutado. <strong>Limitação reconhecida:</strong> SHA-256 é um hash rápido; o sal impede hashes idênticos e tabelas pré-computadas, mas não torna uma senha fraca resistente a tentativas rápidas. Em produção usaríamos uma função de derivação lenta (PBKDF2, bcrypt ou Argon2); mantivemos SHA-256 + sal por seguir a exigência didática do edital. A interface <strong>não exibe</strong> hashes nem sais: a aba de usuários mostra apenas login, nome, perfil e situação. As senhas de demonstração (<code>Admin@123</code>, <code>Atend@123</code>, <code>Mec@123</code> e as dos usuários <code>usr_*</code>) existem somente para o laboratório local e devem ser trocadas fora dele.</p>
+<div class="ev" data-src="login_perfis.png" data-leg="Login real como Administrador, Atendente e Mecânico: abas diferentes por perfil"></div>
+
+<h3>6.4 Dados pessoais e cuidados (LGPD)</h3>
+<table>
+  <tr><th style="width:26%">Dado</th><th>Onde</th><th>Cuidado adotado</th></tr>
+  <tr><td>CPF/CNPJ, telefone, e-mail, endereço do cliente</td><td><code>cliente</code></td><td>Carga 100% sintética (nenhum dado real de terceiros); mecânico não acessa essas colunas (role e visão); atendente acessa por necessidade do atendimento.</td></tr>
+  <tr><td>CPF do mecânico</td><td><code>mecanico</code></td><td>Dados fictícios; visível apenas ao administrador na aplicação.</td></tr>
+  <tr><td>Placa do veículo (identifica o proprietário)</td><td><code>veiculo</code></td><td>Placas fictícias; acesso limitado por perfil.</td></tr>
+  <tr><td>Credenciais</td><td><code>usuario_sistema</code></td><td>Hash + sal; hashes ocultos na interface; <code>db.properties</code> fora do Git.</td></tr>
+  <tr><td>Registros de auditoria</td><td><code>auditoria_sistema</code></td><td>Registram valores operacionais (status, preço, estoque), não CPF nem senha; visível apenas ao administrador.</td></tr>
+</table>
+
+<!-- ================= 7 ================= -->
+<h2>7. B6 — Gatilhos e auditoria</h2>
+<table>
+  <tr><th style="width:27%">Gatilho</th><th>O que audita e por quê (justificativa de domínio)</th></tr>
+  <tr><td><code>trg_auditoria_ordem_servico_update</code></td><td>Mudança de <strong>status</strong>, <strong>valor total</strong> ou <strong>mecânico responsável</strong> da OS. Afetam faturamento e responsabilidade técnica pela garantia.</td></tr>
+  <tr><td><code>trg_auditoria_peca_update</code></td><td>Mudança de <strong>preço unitário</strong> ou <strong>estoque</strong>. Risco de perda material e distorção financeira.</td></tr>
+  <tr><td><code>trg_historico_status_os_au</code> (RN15)</td><td>Quando <code>ordem_servico.status</code> realmente muda, insere automaticamente a transição em <code>historico_status_os</code>. Isso também funciona para UPDATEs SQL diretos; a aplicação não insere uma segunda linha manualmente.</td></tr>
+</table>
+<p>Cada registro de <code>auditoria_sistema</code> guarda tabela, operação, id do registro, <strong>autor</strong>, data/hora e valores <strong>anterior</strong> e <strong>posterior</strong>. <strong>Autor:</strong> a aplicação envia o login do operador em <code>SET @usuario_aplicacao = ?</code> a cada conexão aberta, e o gatilho grava <code>COALESCE(@usuario_aplicacao, USER())</code> — ou seja, <code>app:&lt;login&gt;</code> quando a alteração vem da aplicação, ou a conta da sessão SQL (<code>USER()</code>) quando vem de uma sessão direta. Em gatilhos MySQL, <code>CURRENT_USER()</code> pode identificar o definidor do gatilho; por isso não é usado como fallback para identificar a sessão que executou o comando.</p>
+<p><strong>Alcance da proteção:</strong> os gatilhos <em>registram</em> as alterações; não tornam a tabela imutável. O administrador do banco, com todos os privilégios, pode alterar ou apagar a auditoria; as roles de atendente e mecânico não recebem privilégio algum sobre ela. A conta técnica da aplicação (<code>app_oficina</code>) tem DML em todo o esquema, inclusive nessa tabela; a aplicação, porém, não oferece nenhuma operação que a altere (a aba de auditoria é somente leitura). Não prometemos proteção contra o DBA, e o valor <code>app:&lt;login&gt;</code> é uma identificação lógica fornecida pela aplicação, não uma prova criptográfica da identidade humana.</p>
+<p>Gatilhos adicionais de integridade: <code>trg_mecanico_supervisor_bi/bu</code> (RN20) e <code>trg_garantia_os_concluida_bi</code>, <code>trg_garantia_os_concluida_bu</code> e <code>trg_os_status_garantia_bu</code> (RN16, cobrindo INSERT e UPDATE na garantia e a mudança de status da OS). O gatilho <code>trg_historico_status_os_au</code> assegura a RN15 também em alterações SQL diretas. O script de auditoria é reexecutável (<code>CREATE TABLE IF NOT EXISTS</code>, índices declarados na própria criação, <code>DROP TRIGGER IF EXISTS</code>) e não apaga dados já auditados.</p>
+<div class="ev" data-src="auditoria.png" data-leg="auditoria_sistema após UPDATE feito por dois operadores diferentes (coluna autor)"></div>
+
+<!-- ================= 8 ================= -->
+<h2>8. B7 — Projeto físico, volumetria, backup e arquivamento</h2>
+<h3>8.1 Revisão dos tipos de dados</h3>
+<table>
+  <tr><th style="width:26%">Coluna</th><th style="width:28%">Tipo atual</th><th>Avaliação / o que mudaria</th></tr>
+  <tr><td>Valores monetários</td><td><code>DECIMAL(10,2)</code></td><td>Correto (exato, sem erro de ponto flutuante). Mantido.</td></tr>
+  <tr><td>CPF/CNPJ (<code>cpf_cnpj</code>, <code>cpf</code>, <code>cnpj</code>)</td><td><code>VARCHAR</code> com só dígitos</td><td>CPF poderia ser <code>CHAR(11)</code> (tamanho fixo). Mantido <code>VARCHAR</code> porque a coluna de cliente aceita CPF <em>ou</em> CNPJ. A normalização (remover pontuação) é feita pela aplicação; o banco compara texto, então uma inserção direta com pontuação poderia escapar do <code>UNIQUE</code> — limitação documentada.</td></tr>
+  <tr><td><code>ano_fabricacao</code></td><td><code>YEAR</code></td><td>Adequado (1 byte).</td></tr>
+  <tr><td>Status</td><td><code>ENUM</code></td><td>Compacto e validado pelo banco; trocar a lista exige <code>ALTER TABLE</code>. Para domínio que muda com frequência usaríamos tabela de domínio.</td></tr>
+  <tr><td><code>quantidade_horas</code></td><td><code>DECIMAL(4,2)</code></td><td>Suficiente (até 99,99 h por item), com <code>CHECK &gt; 0</code>.</td></tr>
+  <tr><td><code>historico_status_os.data_hora</code></td><td><code>DATETIME(6)</code></td><td><strong>Alterado</strong> de <code>DATETIME</code> para microssegundos, evitando colisão de chave quando duas transições ocorrem no mesmo segundo.</td></tr>
+  <tr><td>Chaves substitutas</td><td><code>INT UNSIGNED</code></td><td>Suficientes (4,29 bilhões); <code>BIGINT</code> só seria necessário para <code>auditoria_sistema</code> em volumes muito acima do projetado.</td></tr>
+</table>
+<h3>8.2 Estimativa de crescimento (2 anos) — <em>estimativa, não medição</em></h3>
+<p>Premissas explícitas: oficina de porte médio com <strong>400 OS/mês</strong> (9.600 em 24 meses); 2,5 itens e 2,8 peças por OS; 2,9 transições de status por OS; ~3 alterações auditadas por OS. Tamanhos médios de linha estimados.</p>
+<table>
+  <tr><th>Tabela</th><th>Linhas em 24 meses</th><th>Bytes/linha (est.)</th><th>Dados (≈)</th></tr>
+  <tr><td><code>ordem_servico</code></td><td>9.600</td><td>150</td><td>1,4 MB</td></tr>
+  <tr><td><code>item_ordem_servico</code></td><td>24.000</td><td>60</td><td>1,4 MB</td></tr>
+  <tr><td><code>peca_utilizada</code></td><td>26.900</td><td>50</td><td>1,3 MB</td></tr>
+  <tr><td><code>historico_status_os</code></td><td>27.800</td><td>40</td><td>1,1 MB</td></tr>
+  <tr><td><code>auditoria_sistema</code></td><td>28.800</td><td>300</td><td>8,6 MB</td></tr>
+  <tr><td><strong>Total</strong></td><td>≈ 117.000</td><td></td><td><strong>≈ 14 MB</strong> de dados; ≈ <strong>25–30 MB</strong> com índices e sobrecarga do InnoDB (fator ≈ 2)</td></tr>
+</table>
+<p>Conclusão: o volume é pequeno para o MySQL; a tabela de maior crescimento em bytes é <code>auditoria_sistema</code>.</p>
+<h3>8.3 Plano de backup — <span class="plan">Planejado (não implantado)</span></h3>
+<p>Esta é uma <strong>proposta</strong>; o repositório não contém agendador, nem evidência de execução ou de restauração. Estratégia 3-2-1: <strong>3 cópias</strong> (produção + dump local + dump externo), em <strong>2 tipos de mídia</strong> (disco do servidor + armazenamento externo/nuvem) e <strong>1 cópia fora do local</strong>.</p>
+<table>
+  <tr><th style="width:24%">Item</th><th>Proposta</th></tr>
+  <tr><td>O que copiar</td><td>Esquema + dados + rotinas + gatilhos: <code>mysqldump --single-transaction --routines --triggers --events oficina_mecanica | gzip &gt; oficina_AAAAMMDD.sql.gz</code>; arquivos de configuração do servidor.</td></tr>
+  <tr><td>Frequência</td><td>Dump completo diário (madrugada); log binário contínuo para recuperação até um instante (<em>point-in-time</em>). Verificar o estado real com <code>SHOW VARIABLES LIKE 'log_bin'</code> — não presumimos que esteja ativo.</td></tr>
+  <tr><td>Retenção</td><td>7 diários, 4 semanais, 12 mensais; cópia externa criptografada.</td></tr>
+  <tr><td>Teste de restauração</td><td>Mensal: restaurar o dump mais recente em base de teste (<code>mysql oficina_teste &lt; dump.sql</code>), executar <code>09_verificacao_final.sql</code> e comparar contagens com a produção. Responsável: administrador do banco.</td></tr>
+</table>
+<div class="ev" data-src="backup_restore.png" data-leg="(Opcional) Restauração de um dump em base de teste e verificação 09"></div>
+
+<h3>8.4 Particionamento e arquivamento — <span class="plan">Planejado</span></h3>
+<p>Não propomos <code>PARTITION BY RANGE</code> em <code>historico_status_os</code>: no MySQL 8.0, <strong>tabelas InnoDB com particionamento definido pelo usuário não suportam chaves estrangeiras</strong> (a tabela referencia <code>ordem_servico</code> por FK), de modo que o comando não seria executável no esquema atual. A proposta compatível é <strong>arquivamento histórico</strong>: criar <code>historico_status_os_arq</code> (mesma estrutura, sem FK), mover periodicamente para ela as linhas de OS finalizadas há mais de 24 meses em transação (<code>INSERT … SELECT</code> seguido de <code>DELETE</code>) e aplicar a mesma rotina a <code>auditoria_sistema</code>. Dado o volume estimado (≈ 14 MB em 2 anos), a medida não é necessária hoje; fica como plano para crescimento. Não foi executada.</p>
+
+<!-- ================= 9 ================= -->
+<h2>9. Roteiro da demonstração (15 min)</h2>
+<table>
+  <tr><th style="width:17%">Momento</th><th style="width:8%">Tempo</th><th>O que mostrar</th></tr>
+  <tr><td>Contexto</td><td>2 min</td><td>Domínio, entidades e o que mudou desde a Etapa 1 (seção 2.2).</td></tr>
+  <tr><td>CRUD e consultas</td><td>4 min</td><td>Cadastro de veículo Carro/Moto; consulta de OS com filtros; relatório consolidado (visão).</td></tr>
+  <tr><td>Transação</td><td>3 min</td><td>Lançar item+peça com sucesso (estoque e total); botão de falha provocada com banco íntegro.</td></tr>
+  <tr><td>Restrições em ação</td><td>2 min</td><td>CPF duplicado → mensagem tratada; injeção <code>' OR '1'='1</code>.</td></tr>
+  <tr><td>Desempenho e acesso</td><td>3 min</td><td><code>EXPLAIN ANALYZE</code> antes/depois do índice; login como Administrador e como Atendente (abas e ações diferentes).</td></tr>
+  <tr><td>Arguição</td><td>1 min</td><td>Perguntas a integrantes sorteados.</td></tr>
+</table>
+<p>Preparação: banco povoado (scripts 01–07), script 09 com todas as linhas OK, aplicação rodando, e <strong>duas conexões</strong> abertas no Workbench para o experimento de concorrência.</p>
+
+<!-- ================= 10 ================= -->
+<h2>10. Checklist da Etapa 2 (Anexo C do edital)</h2>
+<p>“Implementado” baseia-se em código revisado. A coluna “Testado” é preenchida automaticamente pela existência do print correspondente em <code>docs/evidencias/</code>.</p>
+<table id="checklist">
+  <tr><th style="width:44%">Item do edital</th><th style="width:16%">Implementado</th><th>Testado (evidência)</th></tr>
+  <tr data-ev="verif_09.png"><td>A aplicação sobe em máquina limpa seguindo o README (scripts 01–07, <code>db.properties</code>, Maven)</td><td class="ok">Sim</td><td class="t"></td></tr>
+  <tr data-ev="verif_09.png"><td>Quatro CRUDs, duas consultas parametrizadas e o relatório funcionam (7 CRUDs, 2 consultas, 1 relatório por visão)</td><td class="ok">Sim</td><td class="t"></td></tr>
+  <tr><td>Nenhuma consulta é montada por concatenação de string</td><td class="ok">Sim (inspeção: só <code>PreparedStatement</code>)</td><td>Verificado por inspeção do código</td></tr>
+  <tr><td>Credenciais do banco não estão versionadas (<code>db.properties</code> no <code>.gitignore</code>)</td><td class="ok">Sim</td><td>Verificado por inspeção</td></tr>
+  <tr data-ev="tx_rollback.png"><td>Operação transacional testada nos dois desfechos (sucesso e falha)</td><td class="ok">Sim</td><td class="t"></td></tr>
+  <tr data-ev="conc_sessaoB.png"><td>Experimento de concorrência documentado com o que foi observado</td><td class="ok">Sim (roteiro)</td><td class="t"></td></tr>
+  <tr data-ev="b4_c3_depois.png"><td>Três estudos de EXPLAIN com plano antes, índice, plano depois e tempo</td><td class="ok">Sim (roteiro + índices)</td><td class="t"></td></tr>
+  <tr data-ev="grants_revoke.png"><td>Três perfis criados e testados com login real (roles SQL + perfis da aplicação)</td><td class="ok">Sim</td><td class="t"></td></tr>
+  <tr data-ev="verif_09.png"><td>Senhas da aplicação com hash e sal (sal de 128 bits; hash de 64)</td><td class="ok">Sim</td><td class="t"></td></tr>
+  <tr data-ev="auditoria.png"><td>Dois gatilhos de auditoria registram autor, data e valores</td><td class="ok">Sim</td><td class="t"></td></tr>
+  <tr><td>Plano de backup descrito com frequência e retenção</td><td class="plan">Planejado (proposta)</td><td>Não implantado; restauração não testada</td></tr>
+  <tr><td>Correções da devolutiva da Etapa 1 incorporadas</td><td class="ok">Sim (seção 2)</td><td>Verificável no repositório</td></tr>
+  <tr><td>Ambiente de demonstração preparado (banco povoado, duas sessões abertas)</td><td class="plan">Preparar antes da banca</td><td>—</td></tr>
+  <tr><td>Declaração de uso de IA preenchida</td><td class="ok">Sim (seção 11)</td><td>—</td></tr>
+</table>
+
+<!-- ================= 11 ================= -->
+<h2>11. Declaração de uso de Inteligência Artificial</h2>
+<p>Em atendimento ao item 9 do edital, a equipe declara o uso de assistentes de IA generativa durante o projeto:</p>
+<ul>
+  <li><strong>Ferramentas:</strong> assistentes de IA generativa de uso geral. Na revisão final de 18/10/2026 foram utilizados <strong>Claude (Anthropic)</strong> e <strong>ChatGPT (OpenAI)</strong>.</li>
+  <li><strong>Partes apoiadas:</strong> estruturação do projeto Maven; geração de sal/hash; revisão e depuração de código Java e scripts SQL; auditoria do repositório contra o enunciado; revisão das permissões por coluna da role de atendimento; criação de gatilho de histórico de status (RN15); revisão do fluxo de conexão e da documentação; inclusão de <code>EXPLAIN ANALYZE</code>, do script <code>09_verificacao_final.sql</code> e da reexecutabilidade do script 08; reescrita deste relatório.</li>
+  <li><strong>Como o resultado foi verificado:</strong> o código Java foi compilado sem erros com o JDK 21 após cada alteração; a inspeção do código confirmou o uso exclusivo de <code>PreparedStatement</code>; a verificação dos scripts no MySQL é feita pela equipe com o script 09 e os roteiros 06 e 08, e <strong>só consta como “Testado” neste relatório o que tem print real</strong> (seção 10). Os planos de execução, tempos e resultados de concorrência vêm exclusivamente das execuções da equipe.</li>
+  <li><strong>Responsabilidade:</strong> todos os integrantes devem saber explicar qualquer parte do projeto na arguição.</li>
+</ul>
+
+</body>
+<script>
+// Insere cada evidência real; se o arquivo não existir, mostra aviso (nada é inventado).
+(function () {
+  function alvo(f) { return "evidencias/" + f; }
+  document.querySelectorAll(".ev").forEach(function (d) {
+    var f = d.getAttribute("data-src"), leg = d.getAttribute("data-leg");
+    var img = new Image();
+    img.onload = function () {
+      d.appendChild(img);
+      var l = document.createElement("div"); l.className = "leg"; l.textContent = "Evidência: " + leg; d.appendChild(l);
+    };
+    img.onerror = function () {
+      d.innerHTML = '<div class="pendente"><strong>Pendente de registro:</strong> ' + leg + ' <br>(salvar o print em <code>docs/evidencias/' + f + '</code> e regenerar o PDF)</div>';
+    };
+    img.src = alvo(f);
+  });
+  document.querySelectorAll("#checklist tr[data-ev]").forEach(function (tr) {
+    var c = tr.querySelector(".t"), f = tr.getAttribute("data-ev"), i = new Image();
+    i.onload = function () { c.innerHTML = '<span class="ok">Testado</span> — ' + f; };
+    i.onerror = function () { c.innerHTML = '<span class="pend">Pendente de registro</span> (' + f + ')'; };
+    i.src = alvo(f);
+  });
+})();
+</script>
+</html>

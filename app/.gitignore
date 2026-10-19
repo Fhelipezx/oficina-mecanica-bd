@@ -1,0 +1,27 @@
+# Credenciais de banco de dados (B2 - Fora do versionamento)
+db.properties
+config.properties
+*.properties.local
+
+# Compilacao e Maven
+target/
+*.class
+
+# IDE NetBeans
+nbproject/private/
+nbbuild/
+dist/
+nbproject/build-impl.xml
+
+# IDE VS Code / Eclipse / IntelliJ
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Sistema operacional
+Thumbs.db
+Desktop.ini
+.DS_Store

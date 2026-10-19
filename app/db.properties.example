@@ -1,0 +1,10 @@
+# Arquivo de configuracao da conexao JDBC - Oficina Mecanica (Etapa 2 - B2)
+# Exemplo local de laboratorio; use uma conta tecnica de menor privilegio e nao use root na aplicacao:
+db.host=localhost
+db.port=3306
+db.name=oficina_mecanica
+db.user=app_oficina
+db.password=AppOficina@2026
+
+# Esta senha e apenas para o ambiente demonstrativo criado pelo script 05.
+# Altere-a em ambientes reais e mantenha db.properties fora do Git.

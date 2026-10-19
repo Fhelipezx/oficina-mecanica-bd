@@ -1,0 +1,19 @@
+PASTA DE EVIDENCIAS (print das saidas REAIS do MySQL Workbench / aplicacao)
+Salve cada print com EXATAMENTE o nome abaixo (.png). O script build_relatorio.sh
+insere cada imagem no PDF e muda o status do item para "Testado" automaticamente.
+Imagem ausente = item aparece como "Pendente de registro" no relatorio (nada e inventado).
+
+verif_09.png         - saida do 09_verificacao_final.sql (todas as linhas OK)
+login_perfis.png     - login real na aplicacao como admin, atendente e mecanico (abas diferentes)
+sql_injection.png    - aba Seguranca: entrada ' OR '1'='1 e o resultado
+tx_sucesso.png       - operacao multitabela (item + peca) confirmada, estoque e total conferidos
+tx_rollback.png      - botao "Simular Falha": antes/depois iguais
+erro_amigavel.png    - mensagem tratada (ex.: CPF duplicado)
+conc_sessaoA.png     - concorrencia: Sessao A (isolamento + UPDATE sem COMMIT)
+conc_sessaoB.png     - concorrencia: Sessao B esperando (lock wait) e depois liberada
+b4_c1_antes.png / b4_c1_depois.png   - EXPLAIN ANALYZE consulta 1 antes/depois do indice
+b4_c2_antes.png / b4_c2_depois.png   - idem consulta 2
+b4_c3_antes.png / b4_c3_depois.png   - idem consulta 3
+grants_revoke.png    - SHOW GRANTS das roles + operacao permitida e negada com usuario real (usr_atendente)
+auditoria.png        - tabela auditoria_sistema apos UPDATE como 2 operadores distintos
+backup_restore.png   - (opcional) restauracao de um dump em base de teste
