@@ -145,33 +145,6 @@ repositorio/
     └── 09_verificacao_final.sql    <- Verificação automática pós-instalação (somente SELECT)
 ```
 
----
-
-## 4. Roteiro Cronometrado para a Apresentação ao Vivo (15 Minutos)
-
-| Momento | Tempo | Roteiro Prático de Demonstração na Apresentação |
-|---|---|---|
-| **Contexto** | 2 min | Apresentar o domínio de Oficina Mecânica, as principais entidades e a evolução da Etapa 1 para a Etapa 2. |
-| **CRUDs e Consultas** | 4 min | 1. Mostrar o cadastro de veículo na aba *Veículos* (gravação atômica da superclasse e subclasse Carro/Moto).<br>2. Abrir a aba *Consulta 1 (OS & Faturamento)* e filtrar por período e status, mostrando a agregação em tempo real nos cards.<br>3. Abrir a aba *Relatório Consolidado (VIEW)* e demonstrar a integração de 7 tabelas vindas da <code>vw_relatorio_consolidado_os</code>. |
-| **Transação** | 3 min | 1. Na aba *Ordens de Serviço*, incluir um item e uma peça com sucesso (mostrando baixa de estoque e recálculo do total).<br>2. Clicar no botão **"⚠️ Simular Falha (Rollback B3)"**: demonstrar a exceção de restrição CHECK provocada no meio do fluxo e o ROLLBACK imediato mantendo o banco 100% íntegro. |
-| **Restrições em Ação** | 2 min | 1. Demonstrar o tratamento de erro amigável (tentar cadastrar cliente com CPF duplicado).<br>2. Na aba *Segurança*, testar o payload de SQL Injection <code>' OR '1'='1</code>, comprovando que a consulta parametrizada neutraliza o ataque. |
-| **Desempenho e Acesso** | 3 min | 1. No MySQL Workbench, exibir a árvore do `EXPLAIN` antes e depois do índice `idx_os_status_abertura` (registrar o que o plano real mostrar; o ganho depende do volume de dados).<br>2. Demonstrar o login sob o perfil `admin` e sob o perfil `atendente` (menor privilégio). |
-| **Arguição** | 1 min | Responder aos questionamentos técnicos do professor Samuel. |
-
----
-
-## 5. Como Enviar o Projeto ao Professor no AVA
-
-O edital exige a entrega no AVA de:
-1. **Link do Repositório Git:**
-   - Crie um repositório no GitHub (ou GitLab), inicialize o git na pasta `repositorio` (com `git init`, `git add .`, `git commit -m "Entrega final Etapa 2"`, `git push`) e certifique-se de que o repositório está **Público** para acesso do professor.
-2. **Relatório Técnico em PDF:**
-   - Antes do envio, salve os prints reais em `docs/evidencias/` (nomes em `LEIA-ME.txt`) e rode `python3 docs/build_relatorio.py` para atualizar o PDF.
-   - Faça o upload do arquivo `docs/relatorio-etapa2.pdf` diretamente na atividade do AVA.
-3. **Backup em ZIP (se solicitado):**
-   - Caso o AVA solicite envio do arquivo compactado, envie o conteúdo da pasta `repositorio` compactado em `.zip` (já com o `oficina-app.zip` removido).
-
----
 
 ## 6. Declaração de Uso de Inteligência Artificial
 
